@@ -1,0 +1,17 @@
+.NavigationItems {
+	margin: 0;
+	padding: 0;
+	list-style: none; /*because this CSS class i.e 'NavigationItems' is going to get added to an unordered list and I don't want
+	have to have default list styled over there.*/
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	height: 100%;
+}
+
+/*this media query is designed for desktop and other large screen, above is for mobile devices*/
+@media (min-width: 500px){
+	.NavigationItems {
+		flex-flow: row;
+	}
+}

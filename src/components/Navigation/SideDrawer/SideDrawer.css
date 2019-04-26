@@ -1,0 +1,33 @@
+.SideDrawer {
+	position: fixed;
+	width: 280px;
+	max-width: 70%;
+	height: 100%;
+	left: 0; /*to sit on full screen we used this*/
+	top: 0; /*to sit on full screen we used this*/
+	z-index: 300;
+	background-color: white;
+	padding: 32px 16px;
+	box-sizing: border-box; /*to adjust the size in padding*/
+	transition: transform 0.3s ease-out; /*imp for opening and closing the sidedrawer*/
+}
+
+/*to determine what will happen on a bigger device, we are using the below media queries*/
+@media (min-width: 500px) {
+	.SideDrawer {
+		display: none; /*if screen width exceeds 500px, the SideDrawer won't be visible*/
+	}
+}
+
+.Open {
+	transform: translateX(0); /*shifts sidedrawer in the position defined in top most '.SideDrawer' class*/
+}
+
+.Close {
+	transform: translateX(-100%); /*this will shift the side drawer to left.*/
+}
+
+.Logo {
+	height: 11%;
+	margin-bottom: 32px;
+}

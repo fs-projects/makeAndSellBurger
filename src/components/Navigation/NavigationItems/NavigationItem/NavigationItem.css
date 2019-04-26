@@ -1,0 +1,45 @@
+.NavigationItem {
+	margin: 10px 0;
+	box-sizing: border-box;
+	display: block; /*to make sure that the items display in rows instead of flex*/
+	width: 100%; 
+}
+
+.NavigationItem a {
+	color: #8F5C2C; 
+	text-decoration: none; /*so that there are no underlines in the links*/
+	width: 100%;
+	box-sizing: border-box; /*to make sure that the height includes the padding and border*/
+	display: block; /*so that height have the effect*/
+}
+
+.NavigationItem a:hover,
+.NavigationItem a:active,
+.NavigationItem a:active {
+	color: #40A4C8;
+}
+
+@media (min-width: 500px){
+	.NavigationItem {
+		margin: 0;
+		display: flex; /*to make sure that we can center the link inside the list vertically*/
+		height: 100%;
+		width: auto; /*to not use the width of 100% which is setup in mobile styles above.*/ 
+		align-items: center;
+	}
+
+.NavigationItem a {
+	color: white;
+	height: 100%;
+	padding: 16px 10px;
+	border-bottom: 4px solid transparent; /*it is imp when a link is hovered*/
+	}
+
+.NavigationItem a:hover,
+.NavigationItem a:active,
+.NavigationItem a:active {
+	background-color: #8F5C2C;
+	border-bottom: 4px solid #40A4C8;
+	color: white;
+	}	
+}
