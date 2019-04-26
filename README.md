@@ -1,3 +1,8 @@
+=======
+# makeAndSellBurger
+A single page React JS application that allows the user to customize a burger, checkout and order so that it can be delivered to their address.
+>>>>>>> 9ec5d3c4e207f901bb07e11ec560e35ab0d90b8b
+
 <<<<<<< HEAD
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -67,7 +72,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-=======
-# makeAndSellBurger
-A single page React JS application that allows the user to customize a burger, checkout and order so that it can be delivered to their address.
->>>>>>> 9ec5d3c4e207f901bb07e11ec560e35ab0d90b8b
