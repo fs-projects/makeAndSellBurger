@@ -7,6 +7,7 @@ import classes from './Button.css';
 //show those children specified in it. 
 const button = (props) => (
 	<button 
+	disabled={props.disabled}
 	//'className' should always be a string, so we applied 'join()' method to make the array to string.
 	className={[classes.Button, classes[props.btnType]].join(' ')}
 	onClick={props.clicked}>

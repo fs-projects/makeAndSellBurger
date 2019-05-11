@@ -3,12 +3,26 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
 import { BrowserRouter } from 'react-router-dom';
 
+//Provider allows us to inject our store to the React component.
+import { Provider } from 'react-redux';
+
+/*'combineReducers', It is a function that takes javascript object mapping our reducers to different slices of our state and merges 
+them to one state and one reducer */ 
+import { createStore } from 'redux';
+
+import reducer from './store/reducer';
+
+const store = createStore(reducer);
+
 const app = (
-	<BrowserRouter>
-		<App />
-	</BrowserRouter>	
+	<Provider store={store}>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</Provider>	
 );
 
 ReactDOM.render(app, document.getElementById('root'));
