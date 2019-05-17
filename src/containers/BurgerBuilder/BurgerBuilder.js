@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+/*It is a function that takes in some configuration and returns a function that takes a component(the reason for two brackets after
+it in the export statement*/
+import { connect } from 'react-redux';
+
 import Aux from '../../hoc/Auxi/Auxi';
 
 import Burger from '../../components/Burger/Burger';
@@ -15,6 +19,8 @@ import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+
+import * as actionTypes from '../../store/actions';
 
 const INGREDIENTS_PRICES = {
 	
@@ -35,8 +41,8 @@ class BurgerBuilder extends Component {
 
 	state = {
 
-		ingredients : null,
-		totalPrice: 10.6,
+		//ingredients : null -> commented as handled in our 'store'
+		//totalPrice: 10.6, -> commented as handled in our 'store'
 		purchasable: false,
 		purchasing: false,
 		loading: false,
@@ -45,10 +51,14 @@ class BurgerBuilder extends Component {
 	};
 
 	componentDidMount() {
-		//BurgerBuilder component is loaded via a route. So it will have access to 'location', history', 'match' etc parameter passed
-		//by browser router. However 'Burger' component that is a child to 'BurgerBuilder' will NOT receive the 'history', 
-		//'match', 'location' etc parameter. This is the reason why we wrapped 'Burger' component with 'withRouter' before exporting it.
-		//'withRouter' is a higher order component that will eject the parameters out of parent componet.  
+		/*BurgerBuilder component is loaded via a route. So it will have access to 'location', history', 'match' etc parameter passed
+		by browser router. However 'Burger' component that is a child to 'BurgerBuilder' will NOT receive the 'history', 
+		'match', 'location' etc parameter. This is the reason why we wrapped 'Burger' component with 'withRouter' before exporting it.
+		'withRouter' is a higher order component that will eject the parameters out of parent component.  */
+		
+		/*commented out this code as we are pulling the ingredients from 'store' as we have implemented 'Redux' in our
+		project. Also we can update our 'store' ingredients by calling firebase also but since as of 12/05 we haven't
+		studied async calls in 'Redux' so we are pulling the ingredients from the 'store' only.
 		console.log('The props coming to [BurgerBuilder] component is', this.props);
 		axios.get('https://the-burger-builder-proje-928d4.firebaseio.com/ingredients.json')
 			 .then(response => {
@@ -56,7 +66,7 @@ class BurgerBuilder extends Component {
 			 })
 			 .catch(error => {
 			 	this.setState({fetchIngredientsError: true});
-			 })
+			 })*/
 	}
 
 	updatePurchaseState (ingredients) {
@@ -120,8 +130,10 @@ class BurgerBuilder extends Component {
 		/*This queryParams array was created to create a string that will send the ingredient and it's component to the checkout
 		page so that the burger in the checkout page displays correct number of ingredients to the customer.*/
 		const queryParams = [];
-		for(let i in this.state.ingredients){
-			queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
+		//prior to redux 'i' was iterated over 'this.state.ingredients'
+		for(let i in this.props.ings){
+			//prior to encodeURIComponent was was passed 'this.state.ingredients'
+			queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ings[i]))
 		}
 		queryParams.push("price=" + this.state.totalPrice)
 		const queryString = queryParams.join('&');
@@ -134,7 +146,7 @@ class BurgerBuilder extends Component {
 
 	render() {
 		const disabledInfo = {
-			...this.state.ingredients
+			...this.props.ings //prior to redux it was 'this.state.ingredients'
 		};
 		
 		//function that will set value of keys in disabledInfo array(which is just a copy of the state) to 'true' or 'false' depending on 
@@ -146,27 +158,29 @@ class BurgerBuilder extends Component {
 		let orderSummary = null;
 		let burger = this.state.fetchIngredientsError ? <p>Ingredients can't be fetched!</p> : <Spinner />;
 
-		if(this.state.ingredients) {
+		//prior to redux if condition was 'this.state.ingredients'
+		if(this.props.ings) {
 			burger = 
 			(
 				<Aux>
-					<Burger ingredients={this.state.ingredients} />
+					<Burger ingredients={this.props.ings} />
 					<BuildControls 
-					ingredientAdded={this.addIngredientHandler}
-					ingredientRemoved={this.removeIngredientHandler}
+					ingredientAdded={this.props.onIngredientAdded}//prior to 'redux' was handled by addIngredientHandler() method
+					ingredientRemoved={this.props.onIngredientRemoved}//prior to 'redux' was handled by removeIngredientHandler() method
 					disabled={disabledInfo}
-					price={this.state.totalPrice}
+					price={this.props.totalPrice}
 					purchasable = {this.state.purchasable}
 					ordered={this.purchaseHandler}
 					/>
 				</Aux>
 			);
 			orderSummary = <OrderSummary 
-							ingredients={this.state.ingredients}
+							ingredients={this.props.ings} //prior to redux it was 'this.state.ingredients'
 							purchaseCancelled={this.purchaseCancelHandler}
 							purchaseContinued={this.purchaseContinueHandler}
-							price={this.state.totalPrice}/>;
+							price={this.props.totalPrice}/>;
 		}
+
 		if(this.state.loading){
 			orderSummary = <Spinner />;
 		}
@@ -182,4 +196,22 @@ class BurgerBuilder extends Component {
 	}
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+	const mapStateToProps = state => {
+		
+		return {
+			ings: state.ingredients,
+			totalPrice: state.totalPrice
+		};
+
+	}
+
+	const mapDispatchToProps = dispatch => {
+		
+		return {
+			onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
+			onIngredientRemoved: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName})
+		};
+
+	}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
