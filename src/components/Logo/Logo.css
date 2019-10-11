@@ -7,5 +7,5 @@
 }
 
 .Logo img {
-	height: 100%;
+	height: 100%; /* the reason for keeping it to 100% is that we want the image to take up the height of it's parent container and not just use it's default height which would cause the image to look bigger and ugly.  */
 }

@@ -135,7 +135,7 @@ class BurgerBuilder extends Component {
 			//prior to encodeURIComponent was was passed 'this.state.ingredients'
 			queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ings[i]))
 		}
-		queryParams.push("price=" + this.state.totalPrice)
+		queryParams.push("price=" + this.props.price)
 		const queryString = queryParams.join('&');
 
 		this.props.history.push({
@@ -168,7 +168,7 @@ class BurgerBuilder extends Component {
 					ingredientAdded={this.props.onIngredientAdded}//prior to 'redux' was handled by addIngredientHandler() method
 					ingredientRemoved={this.props.onIngredientRemoved}//prior to 'redux' was handled by removeIngredientHandler() method
 					disabled={disabledInfo}
-					price={this.props.totalPrice}
+					price={this.props.price}
 					purchasable = {this.state.purchasable}
 					ordered={this.purchaseHandler}
 					/>
@@ -178,7 +178,7 @@ class BurgerBuilder extends Component {
 							ingredients={this.props.ings} //prior to redux it was 'this.state.ingredients'
 							purchaseCancelled={this.purchaseCancelHandler}
 							purchaseContinued={this.purchaseContinueHandler}
-							price={this.props.totalPrice}/>;
+							price={this.props.price}/>;
 		}
 
 		if(this.state.loading){
@@ -200,7 +200,7 @@ class BurgerBuilder extends Component {
 		
 		return {
 			ings: state.ingredients,
-			totalPrice: state.totalPrice
+			price: state.totalPrice
 		};
 
 	}

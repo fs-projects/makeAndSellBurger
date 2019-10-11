@@ -34,7 +34,7 @@ class Modal extends Component{
 				<div 
 					className={classes.Modal}
 					style={{
-						//vh is called 'viewport height'. translateY(0) is a position defined in Modal.css. -100vh, slide outside of screen 
+						//vh is called 'viewport height'. translateY(0) is a position defined in Modal.css. -100vh, slide outside of screen. Y(0) is the default position of modal as per the position defined in 'Modal' class in 'Modal.css' file.
 						transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
 						opacity: this.props.show ? '1' : '0'
 					}}>

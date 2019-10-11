@@ -23,6 +23,8 @@ const withErrorHandler = (WrappedComponent, axios) => {
 		//which is a method yet to be executed. So I have changed below 'componentDidMount()' to 'componentWillUpdate()'. There will be
 		//no effect on the overall functionality as we are not doing any side effect(calling external API's to fetch/post data). 
 
+
+		//A better lifecycle hook will be constructor instead of 'componentWillMount()' as 'componentWillMount()' will be removed in future versions of React.
 		componentWillMount() {
 			//These interceptors are setup to intercept the errors and show the error message in the 'error' object inside the Modal
 			this.reqInterceptor = axios.interceptors.request.use(request=> {	
@@ -46,11 +48,9 @@ const withErrorHandler = (WrappedComponent, axios) => {
 		//'BurgerBuilder' component, to which it is currently tied to. However if we tie this higher order component to other component then 
 		//we will call 'componentWillMount()' again and again, this would cause multiple interceptors in our application and also attaching those
 		//to same 'axios' instance. The problem we will have in future will be, mentioned routing will lead to the problem when we have more pages
-		//with 'withErrorHandler', we ofcourse will craete mulitple instance of class returned from the 'withErrorHandler', therefore all the old
+		//with 'withErrorHandler', we ofcourse will create mulitple instance of class returned from the 'withErrorHandler', therefore all the old
 		//interceptors we setup when we wrapped with another component which might not be needed anymore, still exist, so we
-		//will have a lot of dead interceptors in memory that aren't dead but still react to our requests/response and lead to error and do somehow
-		//change the state of the applications. But more importantly they lead to leakage in memory because these are dead interceptors that is code
-		//still running when not required.   
+		//will have a lot of dead interceptors in memory that aren't dead but still react to our requests/response and lead to error and do somehow change the state of the applications. But more importantly they lead to leakage in memory because these are dead interceptors that is code still running when not required.   
 
 		componentWillUnmount() {
 			axios.interceptors.request.eject(this.reqInterceptor);

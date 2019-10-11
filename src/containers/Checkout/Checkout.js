@@ -51,7 +51,7 @@ class Checkout extends Component {
 					checkoutCancelled={this.checkoutCancelledHandler}
 					checkoutContinue={this.checkoutContinueHandler}/>
 				<Route path={this.props.match.path + '/contact-data'}
-				//the props below are the 'props' that are passed to render method from the 'Route' component 
+				//the props below are the 'props' that are passed to render method from the 'Route' component. A concept point to take away from here is that we are not rendering the component in this way "component = {}" instead we are rendering it as "render = {anonymous function without props}" if we pass 'props' to the inner anyonymous function and then distribute the same to our ContactData component as we have done below already and then we should be able to recieve the history, location and match objects from this Checkout component passed to Contact Data. Another way is that we can wrap Contact Data in 'withRouter' so that react-router ensures that Contact Data recieves all props from Checkout component.  
 					   render={(props) => (<ContactData ingredients={this.state.ingredients} price={this.state.totalPrice} {...props}/>)}/>
 			</div>	 
 		)
