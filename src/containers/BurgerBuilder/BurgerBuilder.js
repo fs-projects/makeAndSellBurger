@@ -22,13 +22,6 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 import * as actionTypes from '../../store/actions';
 
-const INGREDIENTS_PRICES = {
-	
-	salad: 8.34,
-	cheese: 15.56,
-	meat: 40.44,
-	bacon: 20.23
-}
 
 class BurgerBuilder extends Component {
 	
@@ -43,7 +36,7 @@ class BurgerBuilder extends Component {
 
 		//ingredients : null -> commented as handled in our 'store'
 		//totalPrice: 10.6, -> commented as handled in our 'store'
-		purchasable: false,
+		// purchasable: false, -> commented as I have setup the updatePurchaseState to return true/false basis the combined quantity value of ingredients quantify in our ingredients object inside our state in store in reducer. Earlier this function used to set this property basis the combined quantity value of ingredients. Now since we are not managing the state here so we cannot update 'purchasable' property. Also since this is Local UI state so moving it to our reducer is also NOT a good option. Hence manipulating the 'updatePurchaseState' to return true/false and sending that information directly to our BuildControls component is a good idea.
 		purchasing: false,
 		loading: false,
 		fetchIngredientsError: false
@@ -77,8 +70,11 @@ class BurgerBuilder extends Component {
 		.reduce((accumulator, currentValue) => {
 			return accumulator + currentValue;
 		}, 0);
-		this.setState({purchasable: sum > 0});
+		return sum > 0;
 	}
+
+	/* 	
+	Note : As we are updating the burger ingredients as well as totalPrice upon ingredient addition or removal in our Reducer so I have commented about below block of code that was used when the state was not managed by Redux instead was managed in this BurgerBuilder Component.
 
 	addIngredientHandler = (type) => {
 		const oldCount = this.state.ingredients[type]; 
@@ -116,7 +112,8 @@ class BurgerBuilder extends Component {
 		else if (updatedCount < 0){
 			return;
 		}	
-	}
+	} 
+	*/
 
 	purchaseHandler = () => {
 		this.setState({purchasing: true});
@@ -169,7 +166,7 @@ class BurgerBuilder extends Component {
 					ingredientRemoved={this.props.onIngredientRemoved}//prior to 'redux' was handled by removeIngredientHandler() method
 					disabled={disabledInfo}
 					price={this.props.price}
-					purchasable = {this.state.purchasable}
+					purchasable = {this.updatePurchaseState(this.props.ings)}
 					ordered={this.purchaseHandler}
 					/>
 				</Aux>

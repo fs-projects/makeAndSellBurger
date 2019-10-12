@@ -21,11 +21,11 @@ const buildControls = (props) => (
 			key={element.label} 
 			added={() => props.ingredientAdded(element.type)}
 			removed={() => props.ingredientRemoved(element.type)}
-			disabled={props.disabled[element.type]}
-			/>
+			disabled={props.disabled[element.type]}			/>
 		))}
 		{
-		//to disable this button we have to check if none of the burger ingredient is added
+		//to disable this button we have to check if none of the burger ingredient is added.Check the logic for this implemented in the function
+		//updatePurchaseState(ingredients) in 'BurgerBuilder.js' file. 
 		}
 		<button 
 			className={classes.OrderButton}
