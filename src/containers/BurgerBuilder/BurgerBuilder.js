@@ -124,22 +124,29 @@ class BurgerBuilder extends Component {
 	}
 
 	purchaseContinueHandler = () => {
-		/*This queryParams array was created to create a string that will send the ingredient and it's component to the checkout
-		page so that the burger in the checkout page displays correct number of ingredients to the customer.*/
+
+		this.props.history.push('/checkout');
+
+		/*Note: Below block of code is commented because we don't need query paramters logic to pass our ingredients to 'Checkout' compnonent as we have the redux in play and we can directly access the ingredients in the 'Checkout' component by making it to subscribe to our store instead of sending the ingredients from our state in query parameters to 'Checkout' component.*/
+
+		/* This queryParams array was created to create a string that will send the ingredient and it's component to the checkout
+		page so that the burger in the checkout page displays correct number of ingredients to the customer.
 		const queryParams = [];
 		//prior to redux 'i' was iterated over 'this.state.ingredients'
-		for(let i in this.props.ings){
+		for(let i in this.state.ingredients){
 			//prior to encodeURIComponent was was passed 'this.state.ingredients'
-			queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ings[i]))
+			queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
 		}
-		queryParams.push("price=" + this.props.price)
+		queryParams.push("price=" + this.state.totalPrice);
 		const queryString = queryParams.join('&');
 
 		this.props.history.push({
 			pathname: '/checkout',
 			search: '?' + queryString
 			});
+			*/
 	}
+	
 
 	render() {
 		const disabledInfo = {
