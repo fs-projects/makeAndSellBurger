@@ -130,7 +130,7 @@ class ContactData extends Component {
 							{value:'cheapest', displayValue: 'Cheapest'}
 						]
 					},
-					value: '',
+					value: 'Fastest',
 					valid: true
 				},
 				paymentMode: {
