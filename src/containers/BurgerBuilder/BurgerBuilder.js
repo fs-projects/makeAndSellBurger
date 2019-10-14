@@ -20,6 +20,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 import * as burgerBuilderActions from '../../store/actions/index'; //Importing every actions via a single index file so we don't have to include multiple import statement for different types of actions and hence keep the code leaner.
+import { initIngredients } from '../../store/actions/burgerBuilder';
 
 
 class BurgerBuilder extends Component {
@@ -37,18 +38,20 @@ class BurgerBuilder extends Component {
 		//totalPrice: 10.6, -> commented as handled in our 'store'
 		// purchasable: false, -> commented as I have setup the updatePurchaseState to return true/false basis the combined quantity value of ingredients quantify in our ingredients object inside our state in store in reducer. Earlier this function used to set this property basis the combined quantity value of ingredients. Now since we are not managing the state here so we cannot update 'purchasable' property. Also since this is Local UI state so moving it to our reducer is also NOT a good option. Hence manipulating the 'updatePurchaseState' to return true/false and sending that information directly to our BuildControls component is a good idea.
 		purchasing: false,
-		loading: false,
-		fetchIngredientsError: false
+		//loading: false, - handled in store
+		//fetchIngredientsError: false - handled in store
 
 	};
 
 	componentDidMount() {
+		this.props.onInitIngredients();
 		/*BurgerBuilder component is loaded via a route. So it will have access to 'location', history', 'match' etc parameter passed by browser router. However 'Burger' component that is a child to 'BurgerBuilder' will NOT receive the 'history', 'match', 'location' etc parameter. This is the reason why we wrapped 'Burger' component with 'withRouter' before exporting it.'withRouter' is a higher order component that will eject the parameters out of parent component.  */
 		
 		/*commented out this code as we are pulling the ingredients from 'store' as we have implemented 'Redux' in our
 		project. Also we can update our 'store' ingredients by calling firebase also but since as of 12/05 we haven't
 		studied async calls in 'Redux' so we are pulling the ingredients from the 'store' only.
 		console.log('The props coming to [BurgerBuilder] component is', this.props);
+		Check 'burgerBuilder.js' to see the implementation of this code - 14/10/19
 		axios.get('https://the-burger-builder-proje-928d4.firebaseio.com/ingredients.json')
 			 .then(response => {
 			 	this.setState({ingredients: response.data, fetchIngredientsError: true});
@@ -155,7 +158,7 @@ class BurgerBuilder extends Component {
 		}
 
 		let orderSummary = null;
-		let burger = this.state.fetchIngredientsError ? <p>Ingredients can't be fetched!</p> : <Spinner />;
+		let burger = this.props.fetchIngredientsError ? <p>Ingredients can't be fetched!</p> : <Spinner />;
 
 		//prior to redux if condition was 'this.state.ingredients'
 		if(this.props.ings) {
@@ -180,10 +183,11 @@ class BurgerBuilder extends Component {
 							price={this.props.price}/>;
 		}
 
+/* Note : We are fetching base ingredients from firebase and that async call is done in burgerBuilder.js file in 'setIngredients' action creator.  
 		if(this.state.loading){
 			orderSummary = <Spinner />;
 		}
-
+ */
 		return(
 			<Aux>
 				<Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
@@ -199,7 +203,8 @@ class BurgerBuilder extends Component {
 		
 		return {
 			ings: state.ingredients,
-			price: state.totalPrice
+			price: state.totalPrice,
+			fetchIngredientsError: state.fetchIngredientsError
 		};
 
 	}
@@ -208,9 +213,11 @@ class BurgerBuilder extends Component {
 		
 		return {
 			onIngredientAdded: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
-			onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName))
+			onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
+			onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
 		};
 
 	}
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
+

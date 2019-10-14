@@ -9,13 +9,9 @@ const INGREDIENTS_PRICES = {
 }
 
 const initialState = {
-	ingredients: {
-		salad: 0,
-		bacon: 0,
-		meat: 0,
-		cheese: 0
-	},
-	totalPrice: 10.6
+	ingredients: null,
+	totalPrice: 10.6,
+	fetchIngredientsError: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -45,6 +41,25 @@ const reducer = (state = initialState, action) => {
 				},
 			totalPrice: state.totalPrice + INGREDIENTS_PRICES[action.ingredientName]
 			};
+
+		case actionTypes.SET_INGREDIENTS:
+			return {
+				...state,
+				ingredients: {
+					...state.ingredients,
+					cheese: action.ingredients.cheese,
+					salad: action.ingredients.salad,
+					bacon: action.ingredients.bacon,
+					meat: action.ingredients.meat
+				},
+				fetchIngredientsError: false
+			}
+
+		case actionTypes.FETCH_INGREDIENTS_FAILED:
+			return {
+				...state,
+				fetchIngredientsError: true
+			}
 
 		default: 
 			return state;	
