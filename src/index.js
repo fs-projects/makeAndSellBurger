@@ -2,14 +2,16 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 
-import burgerBuilder from './store/reducers/burgerBuilder';
+import burgerBuilderReducer from './store/reducers/burgerBuilder';
+
+import thunk from 'redux-thunk';
 
 //Provider allows us to inject our store to the React component.
 import { Provider } from 'react-redux';
 
 /*'combineReducers', It is a function that takes javascript object mapping our reducers to different slices of our state and merges 
 them to one state and one reducer */ 
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 
 import './index.css';
 
@@ -19,7 +21,9 @@ import * as serviceWorker from './serviceWorker';
 
 import { BrowserRouter } from 'react-router-dom';
 
-const store = createStore(burgerBuilder, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(burgerBuilderReducer, composeEnhancers(applyMiddleware(thunk)));
 
 const app = (
 	<Provider store={store}>
