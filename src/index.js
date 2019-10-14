@@ -2,7 +2,7 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 
-import reducer from './store/reducer';
+import burgerBuilder from './store/reducers/burgerBuilder';
 
 //Provider allows us to inject our store to the React component.
 import { Provider } from 'react-redux';
@@ -19,7 +19,7 @@ import * as serviceWorker from './serviceWorker';
 
 import { BrowserRouter } from 'react-router-dom';
 
-const store = createStore(reducer);
+const store = createStore(burgerBuilder, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 const app = (
 	<Provider store={store}>

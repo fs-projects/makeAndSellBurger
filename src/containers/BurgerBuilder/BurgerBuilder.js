@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-/*It is a function that takes in some configuration and returns a function that takes a component(the reason for two brackets after
-it in the export statement*/
+/*It is a function that takes in some configuration and returns a function that takes a component(the reason for two brackets after it in the export statement*/
 import { connect } from 'react-redux';
 
 import Aux from '../../hoc/Auxi/Auxi';
@@ -20,7 +19,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
-import * as actionTypes from '../../store/actions';
+import * as burgerBuilderActions from '../../store/actions/index'; //Importing every actions via a single index file so we don't have to include multiple import statement for different types of actions and hence keep the code leaner.
 
 
 class BurgerBuilder extends Component {
@@ -44,10 +43,7 @@ class BurgerBuilder extends Component {
 	};
 
 	componentDidMount() {
-		/*BurgerBuilder component is loaded via a route. So it will have access to 'location', history', 'match' etc parameter passed
-		by browser router. However 'Burger' component that is a child to 'BurgerBuilder' will NOT receive the 'history', 
-		'match', 'location' etc parameter. This is the reason why we wrapped 'Burger' component with 'withRouter' before exporting it.
-		'withRouter' is a higher order component that will eject the parameters out of parent component.  */
+		/*BurgerBuilder component is loaded via a route. So it will have access to 'location', history', 'match' etc parameter passed by browser router. However 'Burger' component that is a child to 'BurgerBuilder' will NOT receive the 'history', 'match', 'location' etc parameter. This is the reason why we wrapped 'Burger' component with 'withRouter' before exporting it.'withRouter' is a higher order component that will eject the parameters out of parent component.  */
 		
 		/*commented out this code as we are pulling the ingredients from 'store' as we have implemented 'Redux' in our
 		project. Also we can update our 'store' ingredients by calling firebase also but since as of 12/05 we haven't
@@ -212,8 +208,8 @@ class BurgerBuilder extends Component {
 	const mapDispatchToProps = dispatch => {
 		
 		return {
-			onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
-			onIngredientRemoved: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName})
+			onIngredientAdded: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
+			onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName))
 		};
 
 	}
