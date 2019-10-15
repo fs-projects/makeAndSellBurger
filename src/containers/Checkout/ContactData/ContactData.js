@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 
+import * as actions from '../../../store/actions/index';
+
 import Button from '../../../components/UI/Button/Button';
 
 import classes from './ContactData.css'; 
@@ -11,6 +13,8 @@ import axios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 
 import Input from '../../../components/UI/Input/Input';	
+
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 
 class ContactData extends Component {
 	
@@ -167,7 +171,7 @@ class ContactData extends Component {
 
 	orderHandler = (event) => {
 		event.preventDefault(); //As the button is inside the form element so the default is to send the request and reload the page
-		this.setState({loading: true});
+		//this.setState({loading: true}); -- will be handled in reducer 'order' file under 'actions/reducers' folder
 		let formData = {};
 		for(let formElementIdentifier in this.state.orderForm){
 			formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value
@@ -177,33 +181,20 @@ class ContactData extends Component {
 			price: this.props.price,
 			orderData: formData  
 		}
+		this.props.onOrderBurger(order);
 
-		axios.post('/orders.json', order)
-			 .then(response => {
-			 	this.setState({loading: false, /*purchasing: false*/});
-			 	this.props.history.push('/');
-			 })
-			 .catch(error => {
-			 	this.setState({loading: false, /*purchasing: false*/});
-			 })
+		//Note : Below block is now moved to 'purchaseBurgerStart' action creator in action/order.js file.
+		//axios.post('/orders.json', order)
+			 //.then(response => {
+			 	//this.setState({loading: false, /*purchasing: false*/});
+			 	//this.props.history.push('/');
+			 //})
+			 //.catch(error => {
+			 	//this.setState({loading: false, /*purchasing: false*/});
+			 //})
 	} 
 
-	/*below is very important function covering the concept of two way binding and changing the state immutabily i.e without affecting
-	the original state in the process. Here is a brief description of this function as to why it was created, what it does, how it does and why
-	this function is important. User is redirected to the contact data form as soon as user clicks 'CONTINUE' on the modal that comes
-	when user clicks on 'ORDER NOW' button. Each form element that comes up was disabled earlier as we haven't handled the event of
-	input changes in it. So to handle the event changes on it we applied a 'onChange' listener on each of the 'Input' element and 
-	referenced it to a function 'inputChangedHandler' here in this file. Also we ensured using this function that any change on any
-	form element will be reflected in it by passing a identifier to this function to track and respond to the change on the element
-	being modified. This is called two way binding, i.e the element that is listening to the change is calling a reference to a 
-	function that is defined in other element and the element that is listening to the change is causing a change in the other element
-	where the effects of the change is handled. When we used the spread operator on 'updatedOrderForm' then by default spread operator
-	doesn't do deep copy in case of nested object(like we have in our case of 'orderForm'). So when we spread the 'orderForm' first 
-	time in 'updateOrderForm' we made a shallow copy and the pointer to the nested objects. So if we change anything in the nested
-	object, we mutate the original 'orderForm' nested object which is not right, so what we did is that we made another shallow copy
-	of object that corresponds to the element on which the change is being occured. Although this object itself has a nested object 
-	but that's ok we are not manipulating anything inside the nested object so the value that we are manipulating is 'value' key so 
-	it doesn't affect the original 'value' key in the original 'orderForm' object.*/   
+	/*below is very important function covering the concept of two way binding and changing the state immutabily i.e without affecting the original state in the process. Here is a brief description of this function as to why it was created, what it does, how it does and why this function is important. User is redirected to the contact data form as soon as user clicks 'CONTINUE' on the modal that comes when user clicks on 'ORDER NOW' button. Each form element that comes up was disabled earlier as we haven't handled the event of input changes in it. So to handle the event changes on it we applied a 'onChange' listener on each of the 'Input' element and referenced it to a function 'inputChangedHandler' here in this file. Also we ensured using this function that any change on any form element will be reflected in it by passing a identifier to this function to track and respond to the change on the element being modified. This is called two way binding, i.e the element that is listening to the change is calling a reference to a function that is defined in other element and the element that is listening to the change is causing a change in the other element where the effects of the change is handled. When we used the spread operator on 'updatedOrderForm' then by default spread operator doesn't do deep copy in case of nested object(like we have in our case of 'orderForm'). So when we spread the 'orderForm' first time in 'updateOrderForm' we made a shallow copy and the pointer to the nested objects. So if we change anything in the nested object, we mutate the original 'orderForm' nested object which is not right, so what we did is that we made another shallow copy of object that corresponds to the element on which the change is being occured. Although this object itself has a nested object but that's ok we are not manipulating anything inside the nested object so the value that we are manipulating is 'value' key so it doesn't affect the original 'value' key in the original 'orderForm' object.*/   
 	inputChangedHandler = (event, inputElementIdentifier) => {
 		const updatedOrderForm = {
 			...this.state.orderForm
@@ -260,7 +251,7 @@ class ContactData extends Component {
 			</form>
 		);
 
-		if(this.state.loading){
+		if(this.props.loading){
 			form = <Spinner />
 		}
 
@@ -276,9 +267,16 @@ class ContactData extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		ings: state.ingredients,
-		price: state.totalPrice
+		ings: state.burgerBuilder.ingredients,
+		price: state.burgerBuilder.totalPrice,
+		loading: state.order.loading
 	}
 }
 
-export default connect(mapStateToProps, null)(ContactData);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+	} 
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

@@ -202,9 +202,9 @@ class BurgerBuilder extends Component {
 	const mapStateToProps = state => {
 		
 		return {
-			ings: state.ingredients,
-			price: state.totalPrice,
-			fetchIngredientsError: state.fetchIngredientsError
+			ings: state.burgerBuilder.ingredients,
+			price: state.burgerBuilder.totalPrice,
+			fetchIngredientsError: state.burgerBuilder.fetchIngredientsError
 		};
 
 	}
@@ -216,7 +216,7 @@ class BurgerBuilder extends Component {
 			onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
 			onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
 		};
-
+		
 	}
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import ContactData from './ContactData/ContactData';
+import * as actions from '../../store/actions/index';
 
 class Checkout extends Component {
 
@@ -39,6 +40,10 @@ class Checkout extends Component {
 		this.setState({ingredients: ingredients, totalPrice:price});
 	}
  */
+	
+	componentWillMount(){
+		this.props.initPurchase();
+	}
 
 	checkoutCancelledHandler = () => {
 		this.props.history.goBack();
@@ -47,13 +52,16 @@ class Checkout extends Component {
 	checkoutContinueHandler = () =>  {
 		this.props.history.replace('/checkout/contact-data');
 	}
-	
+
 	render(){
-		
-		return (
+		let summary = <Redirect to='/' />
+		if(this.props.ings){
+			const purchasedRedirect = this.props.purchased ? <Redirect to='/'/>: null;
+			summary = ( 
 			<div>
+				{purchasedRedirect}
 				<CheckoutSummary 
-					ingredients={this.props.ings} 
+					ingredients={this.props.ings}
 					checkoutCancelled={this.checkoutCancelledHandler}
 					checkoutContinue={this.checkoutContinueHandler}/>
 				<Route path={this.props.match.path + '/contact-data'} component={ContactData}/>
@@ -62,14 +70,23 @@ class Checkout extends Component {
 				Note : We also don't need to send the 'ingredients' and 'totalPrice' to 'ContactData' as with the availibility of store we can now let this 'ContactData' subscribe to the store and get these two items directly from there and doesn't depend on below way of getting the two items
 								render={(props) => (<ContactData ingredients={this.state.ingredients} price={this.state.totalPrice} {...props}/>)}/> */}
 			</div>	 
-		);
+			);
+		}
+		return summary;
 	}
 }
 
 const mapStateToProps = (state) => {
-	return {
-		ings: state.ingredients
+	return{
+		ings: state.burgerBuilder.ingredients,
+		purchased: state.order.purchased
 	}
 }
 
-export default connect(mapStateToProps, null)(Checkout);
+const mapDispatchToProps = (dispatch) => {
+	return{
+		initPurchase: () => dispatch(actions.purchaseInit())	
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
