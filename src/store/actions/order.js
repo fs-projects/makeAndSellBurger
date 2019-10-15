@@ -8,12 +8,25 @@ export const purchaseInit = () => {
  }
 }
 
+export const resetTotalPrice = () => {
+  return {
+   type: actionTypes.RESET_TOTAL_PRICE_AFTER_PURCHASE,
+  };
+}
+
 export const purchaseBurgerSuccess = (id, orderData) => {
  return {
   type: actionTypes.PURCHASE_BURGER_SUCCESS,
   orderId: id,
   orderData: orderData
  };
+}
+
+export const purchaseBurgerSuccessCase = (id, orderData) => {
+ return dispatch => {
+  dispatch(purchaseBurgerSuccess(id, orderData));
+  dispatch(resetTotalPrice());
+ }
 }
 
 export const purchaseBurgerFailure  = (error) => {
@@ -35,7 +48,7 @@ export const purchaseBurger = (orderData) => {
   axios.post('/orders.json', orderData)
 			 .then(response => {
      console.log(response.data);
-     dispatch(purchaseBurgerSuccess(response.data.name, orderData));
+     dispatch(purchaseBurgerSuccessCase(response.data.name, orderData));
 			 })
 			 .catch(error => {
 			 	dispatch(purchaseBurgerFailure(error));

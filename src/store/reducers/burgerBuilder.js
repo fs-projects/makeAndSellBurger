@@ -60,6 +60,16 @@ const reducer = (state = initialState, action) => {
 				...state,
 				fetchIngredientsError: true
 			}
+		
+		case actionTypes.RESET_TOTAL_PRICE_AFTER_PURCHASE: {
+				return {
+					...state,
+					ingredients:{
+						...state.ingredients
+					},
+					totalPrice: 10.6
+				}
+			}
 
 		default: 
 			return state;	
