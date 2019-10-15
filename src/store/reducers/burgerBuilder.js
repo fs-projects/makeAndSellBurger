@@ -52,23 +52,14 @@ const reducer = (state = initialState, action) => {
 					bacon: action.ingredients.bacon,
 					meat: action.ingredients.meat
 				},
-				fetchIngredientsError: false
+				fetchIngredientsError: false,
+				totalPrice: 10.6
 			}
 
 		case actionTypes.FETCH_INGREDIENTS_FAILED:
 			return {
 				...state,
 				fetchIngredientsError: true
-			}
-		
-		case actionTypes.RESET_TOTAL_PRICE_AFTER_PURCHASE: {
-				return {
-					...state,
-					ingredients:{
-						...state.ingredients
-					},
-					totalPrice: 10.6
-				}
 			}
 
 		default: 
