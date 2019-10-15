@@ -19,9 +19,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
-import * as burgerBuilderActions from '../../store/actions/index'; //Importing every actions via a single index file so we don't have to include multiple import statement for different types of actions and hence keep the code leaner.
-import { initIngredients } from '../../store/actions/burgerBuilder';
-
+import * as actions from '../../store/actions/index'; //Importing every actions via a single index file so we don't have to include multiple import statement for different types of actions and hence keep the code leaner.
 
 class BurgerBuilder extends Component {
 	
@@ -123,7 +121,7 @@ class BurgerBuilder extends Component {
 	}
 
 	purchaseContinueHandler = () => {
-
+		this.props.initPurchase();
 		this.props.history.push('/checkout');
 
 		/*Note: Below block of code is commented because we don't need query paramters logic to pass our ingredients to 'Checkout' compnonent as we have the redux in play and we can directly access the ingredients in the 'Checkout' component by making it to subscribe to our store instead of sending the ingredients from our state in query parameters to 'Checkout' component.*/
@@ -212,11 +210,12 @@ class BurgerBuilder extends Component {
 	const mapDispatchToProps = dispatch => {
 		
 		return {
-			onIngredientAdded: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
-			onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
-			onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
+			onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
+			onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
+			onInitIngredients: () => dispatch(actions.initIngredients()),
+			initPurchase: () => dispatch(actions.purchaseInit())	
 		};
-		
+
 	}
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
