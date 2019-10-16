@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
 
+import { connect } from 'react-redux';
+
+import * as actions from '../../store/actions/index';
+
 import Order from '../../components/Order/Order';
+
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 import axios from '../../axios-orders';
 
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
+
 class Orders extends Component {
 
-	state = {
+/* 	Note : below state is now managed by redux
+state = {
 		orders: [],
 		loading: true
-	}
+	} */
 	
 	/*We are using 'componentDidMount()' because we have to load the 'Order' component only when we have fetched the Order details
 	from the firebase backend. 'componentWillUpdate() is not required as there is no way to fetch the Orders from backend without 
 	remounting the 'Orders' component.(you will have to mount it first)*/ 
 	componentDidMount() {
-		axios.get('/orders.json')
+/* 		Note : Handling below async call in order reducer and action creator */
+	/* 	axios.get('/orders.json')
 			 .then(res => {
 			 	console.log('The orders fetched from FIREBASE backend is: ', res.data);
 			 	const fetchedOrders = [];
@@ -33,16 +42,24 @@ class Orders extends Component {
 			 	this.setState({
 			 			loading: true}
 			 		);
-			 })			 
+				})			  */
+				this.props.onFetchOrders();
+				console.log("inside orders.js component did mount");
 	}
 
 	render() {
-
-		return(
-
+		console.log("inside orders.js render method");
+		let orderDetails = null;
+		if(this.props.loading){
+			orderDetails = <Spinner />;
+		}
+		if(this.props.orders.length == 0){
+			orderDetails = null;
+		}
+		orderDetails = (
 			<div>
 				{
-					this.state.orders.map(order => (
+					this.props.orders.map(order => (
 					<Order 
 						key={order.id}
 						ingredient={order.ingredients}
@@ -50,9 +67,22 @@ class Orders extends Component {
 					))
 				}
 			</div>
-
 		);
+		return orderDetails;
 	}
 }
 
-export default withErrorHandler(Orders, axios);
+const mapStateToProps = (state) => {
+	return{
+		orders: state.order.orders,
+		loading: state.order.loading
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return{
+		onFetchOrders: () => dispatch(actions.fetchOrders())
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Orders, axios));
