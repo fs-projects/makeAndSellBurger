@@ -1,7 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
+import { updateObject } from '../utility';
+
 const INGREDIENTS_PRICES = {
-	
 	salad: 8.34,
 	cheese: 15.56,
 	meat: 40.44,
@@ -19,48 +20,46 @@ const reducer = (state = initialState, action) => {
 	switch (action.type) {
 
 		case actionTypes.ADD_INGREDIENT:
-			return {
-			...state,
-			ingredients: {
-					...state.ingredients,
-					//below is the new ES6 feature to dynamically add a property to an object. From burger perspective we are overriding a
-					//property name value with the new value dynamically.
-					[action.ingredientName]: state.ingredients[action.ingredientName] + 1
-				},
-			totalPrice: state.totalPrice + INGREDIENTS_PRICES[action.ingredientName]
+			const updatedIngredient = {
+				//below is the new ES6 feature to dynamically add a property to an object. From burger perspective we are overriding a property name value with the new value dynamically.
+				[action.ingredientName]: state.ingredients[action.ingredientName] + 1
 			};
+			const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+			const updatedState = {
+				ingredients: updatedIngredients,
+				totalPrice: state.totalPrice + INGREDIENTS_PRICES[action.ingredientName]
+			}
+			return updateObject(state, updatedState);
 		
-		case actionTypes.REMOVE_INGREDIENT:	
-			return {
-			...state,
-			ingredients: {
-					...state.ingredients,
-					//below is the new ES6 feature to dynamically add a property to an object. From burger perspective we are overriding a
-					//property name value with the new value.
+		case actionTypes.REMOVE_INGREDIENT:
+				const updatedIng = {
+					//below is the new ES6 feature to dynamically add a property to an object. From burger perspective we are overriding a property name value with the new value dynamically.
 					[action.ingredientName]: state.ingredients[action.ingredientName] - 1
-				},
-			totalPrice: state.totalPrice + INGREDIENTS_PRICES[action.ingredientName]
-			};
+				};
+				const updatedIngs = updateObject(state.ingredients, updatedIng);
+				const updatedSt = {
+					ingredients: updatedIngs,
+					totalPrice: state.totalPrice + INGREDIENTS_PRICES[action.ingredientName]
+				}
+			return updateObject(state, updatedSt);
 
 		case actionTypes.SET_INGREDIENTS:
-			return {
-				...state,
-				ingredients: {
-					...state.ingredients,
+			 const updatedIngredientItems = {
 					cheese: action.ingredients.cheese,
 					salad: action.ingredients.salad,
 					bacon: action.ingredients.bacon,
 					meat: action.ingredients.meat
-				},
-				fetchIngredientsError: false,
-				totalPrice: 10.6
-			}
+				}
+				const updatedIngredientsItems = updateObject(state.ingredients, updatedIngredientItems);
+				const updatedStateItems = {
+					ingredients: updatedIngredientsItems,
+					fetchIngredientsError: false,
+					totalPrice: 10.6	
+				}
+				return updateObject(state, updatedStateItems);
 
 		case actionTypes.FETCH_INGREDIENTS_FAILED:
-			return {
-				...state,
-				fetchIngredientsError: true
-			}
+			 return updateObject(state, {fetchIngredientsError: true});
 
 		default: 
 			return state;	
