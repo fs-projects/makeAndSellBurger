@@ -23,6 +23,7 @@ const authSuccess = (state, action) => {
 }
 
 const authFail = (state, action) => {
+ console.log(action.error);
   return updateObject(state, {error: action.error, loading:false})
 }
 
@@ -31,7 +32,6 @@ const authReducer = (state = initialState, action) => {
  switch(action.type){
 
   case actionTypes.AUTH_START:{
-   console.log('inside authStart reducer function...');
    return authStart(state, action);
   }
 
