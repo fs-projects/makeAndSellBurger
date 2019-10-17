@@ -11,6 +11,7 @@ const navigationItems = () => (
 	{/*I have removed the 'active' class from 'Burger Builder' named nav item just below because NavigationItem component has taken care of it in it's definition*/}
 		<NavigationItem link="/" exact>Burger Builder</NavigationItem>
 		<NavigationItem link="/orders">Orders</NavigationItem>
+		<NavigationItem link="/auth">Login</NavigationItem>
 	</div>
 )
 

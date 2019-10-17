@@ -44,16 +44,14 @@ state = {
 			 		);
 				})			  */
 				this.props.onFetchOrders();
-				console.log("inside orders.js component did mount");
 	}
 
 	render() {
-		console.log("inside orders.js render method");
 		let orderDetails = null;
 		if(this.props.loading){
 			orderDetails = <Spinner />;
 		}
-		if(this.props.orders.length == 0){
+		if(this.props.orders.length === 0){
 			orderDetails = null;
 		}
 		orderDetails = (

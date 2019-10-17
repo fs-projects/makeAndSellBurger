@@ -161,10 +161,24 @@ class ContactData extends Component {
 
 		if(rules.required) {
 			isValid = value.trim() !== '';
-		
-			if(rules.minLength && rules.maxLength) {
-				isValid = (value.length >= rules.minLength) && (value.length <= rules.maxLength)
-				}	
+		}
+
+		if(rules.minLength){
+			isValid = value.length >= rules.minLength && isValid
+		}
+
+		if(rules.maxLength){
+						isValid = value.length <= rules.maxLength && isValid
+		}
+
+		if(rules.isEmail){
+						const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+						isValid = pattern.test(value) && isValid
+		}
+
+		if(rules.isNumeric){
+						const pattern = /^\d+$/;
+						isValid = pattern.test(value) && isValid
 		}
 		return isValid;
 	}
@@ -238,12 +252,12 @@ class ContactData extends Component {
 							<Input 
 								key={formElement.id}
 								elementType={formElement.config.elementType}
-							 	elementConfig={formElement.config.elementConfig}
-							 	value={formElement.config.value}
-							 	invalid={!formElement.config.valid}
-							 	shouldValidate={formElement.config.validation}
-							 	touched={formElement.config.touched}
-							 	changed={(event) => this.inputChangedHandler(event, formElement.id)} />
+							 elementConfig={formElement.config.elementConfig}
+							 value={formElement.config.value}
+							 invalid={!formElement.config.valid}
+							 shouldValidate={formElement.config.validation}
+							 touched={formElement.config.touched}
+							 changed={(event) => this.inputChangedHandler(event, formElement.id)} />
 						)
 					)
 				}
@@ -256,7 +270,6 @@ class ContactData extends Component {
 		}
 
 		return(
-
 			<div className={classes.ContactData}>
 				<h3>Please share these details to deliver this burger and help you server better next time..</h3>
 				{form}
