@@ -125,9 +125,9 @@ class Auth extends Component {
 
   if(this.props.error){
    errorMessage = (
-    <div>
-     <h2>Request failed : {this.props.error.response.data.error.message}</h2>
-     <p>Error Code : {this.props.error.response.data.error.code}</p>
+    <div className={classes.Error}>
+     <h2>Request failed! <i>"{this.props.error.response.data.error.message}"</i></h2>
+     <h4>Error Code : <i>{this.props.error.response.data.error.code}</i></h4>
     </div>
    );
   }
