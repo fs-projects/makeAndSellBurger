@@ -10,7 +10,10 @@ const navigationItems = (props) => (
 	<div className={classes.NavigationItems}>
 	{/*I have removed the 'active' class from 'Burger Builder' named nav item just below because NavigationItem component has taken care of it in it's definition*/}
 		<NavigationItem link="/" exact>Burger Builder</NavigationItem>
-		<NavigationItem link="/orders">Orders</NavigationItem>
+		{props.isAuthenticated 
+				? <NavigationItem link="/orders">Orders</NavigationItem>
+				: null
+		}
 		{props.isAuthenticated 
 				? <NavigationItem link="/logout">Logout</NavigationItem>
 				: <NavigationItem link="/auth">Login</NavigationItem>

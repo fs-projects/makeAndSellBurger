@@ -113,7 +113,13 @@ class BurgerBuilder extends Component {
 	*/
 
 	purchaseHandler = () => {
-		this.setState({purchasing: true});
+		if(this.props.isAuthenticated){
+			this.setState({purchasing: true});
+		} else{
+			//setting redirect path in burgerBuilder reducer to make sure that when '/auth' is loaded we can do some logic there to redirect user to '/checkout' if login is success. The reason for setting this redirect path to '/checkout' in reducer is that as we know that user is not authenticated(that's why we are in else block) and still able to reach 'purchaseHandler' function is only possible if he has added atleast one ingredient to his burger. So in such a case it becomes necessary to set the redirect path in reducer to '/checkout' so that we can use this redirect path later to redirect the user to checkout page only when he login to '/auth' path. In this way we don't loose the ingredients information on BurgerBuilder page that the user has entered without login and also allow user to login and redirect to '/checkout' path which is the correct logical path to be shown to such type of users. 
+			this.props.onSetAuthRedirectPath('/checkout');
+			this.props.history.push('/auth');
+		}
 	}
 
 	purchaseCancelHandler = () => {
@@ -171,6 +177,7 @@ class BurgerBuilder extends Component {
 					price={this.props.price}
 					purchasable = {this.updatePurchaseState(this.props.ings)}
 					ordered={this.purchaseHandler}
+					isAuthenticated = {this.props.isAuthenticated}
 					/>
 				</Aux>
 			);
@@ -202,7 +209,8 @@ class BurgerBuilder extends Component {
 		return {
 			ings: state.burgerBuilder.ingredients,
 			price: state.burgerBuilder.totalPrice,
-			fetchIngredientsError: state.burgerBuilder.fetchIngredientsError
+			fetchIngredientsError: state.burgerBuilder.fetchIngredientsError,
+			isAuthenticated: state.auth.token !== null
 		};
 
 	}
@@ -213,7 +221,8 @@ class BurgerBuilder extends Component {
 			onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
 			onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
 			onInitIngredients: () => dispatch(actions.initIngredients()),
-			initPurchase: () => dispatch(actions.purchaseInit())	
+			initPurchase: () => dispatch(actions.purchaseInit()),
+			onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))	
 		};
 
 	}

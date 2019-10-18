@@ -24,13 +24,12 @@ const buildControls = (props) => (
 			disabled={props.disabled[element.type]}			/>
 		))}
 		{
-		//to disable this button we have to check if none of the burger ingredient is added.Check the logic for this implemented in the function
-		//updatePurchaseState(ingredients) in 'BurgerBuilder.js' file. 
+		//to disable this button we have to check if none of the burger ingredient is added. Check the logic for this implemented in the function updatePurchaseState(ingredients) in 'BurgerBuilder.js' file. 
 		}
 		<button 
 			className={classes.OrderButton}
 			disabled={!props.purchasable}
-			onClick={props.ordered}>ORDER NOW!
+			onClick={props.ordered}>{props.isAuthenticated ? 'ORDER NOW!' : 'SIGNUP TO ORDER!'}
 		</button>
 	</div>
 );
