@@ -23,6 +23,9 @@ export const authFail = (error) => {
 }
 
 export const logOut = () => {
+ localStorage.removeItem('token');
+ localStorage.removeItem('expirationDate');
+ localStorage.removeItem('userId');
  return{
   type: actionTypes.AUTH_LOGOUT
  }
@@ -52,6 +55,11 @@ export const auth = (email, password, isSignUp) => {
   axios.post(url, authData)
   .then(response => {
    console.log(response);
+   //here we are getting the current time in milliseconds and adding the expiry time(after converting to milliseconds)in it. Multiplying it by 1000 because JS time works in milliseconds. Now we are passing the value to 'new Date' that takes in that combined time in millisecond and gives us a new Date that we can take as expiration Date.
+   const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
+   localStorage.setItem('token', response.data.idToken);
+   localStorage.setItem('expirationDate', expirationDate);
+   localStorage.setItem('userId', response.data.localId);
    dispatch(authSuccess(response.data.idToken, response.data.localId));
    dispatch(checkAuthTimeout(response.data.expiresIn));
   })
@@ -62,9 +70,33 @@ export const auth = (email, password, isSignUp) => {
  }
 }
 
+/* */
 export const setAuthRedirectPath = (path) => {
  return{
   type: actionTypes.SET_AUTH_REDIRECT_PATH,
   path: path
+ }
+}
+
+/*This function is created to run everytime 'App' component is mounted. This function will ensure that if the browser's local storage has the token, expirationDate and userId then let's not logout the user when the application is reloaded. Instead make sure that user is logged in for the time token is expired.*/
+export const authCheckState = () => {
+ return dispatch => {
+  const token = localStorage.getItem('token');
+  if(!token){
+   dispatch(logOut());
+  }
+  else{
+   //Reason for wrapping new Date around 'localStorage.getItme('expirationDate')' is that because former value corresponds to a string, so we need to convert that string into a valid date object. 
+   const expirationDate = new Date(localStorage.getItem('expirationDate'));
+   if(expirationDate >= new Date()){
+    const userId = localStorage.getItem('userId');
+    dispatch(authSuccess(token, userId));
+    //getTime() will give correct time in milliseconds. Converted to seconds as we convert this time to millisecond in in our 'checkAuthTimeout()' action creator. 
+    dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()/1000)));
+   }
+   else{
+    dispatch(logOut());
+   }   
+  }
  }
 }
