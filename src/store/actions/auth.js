@@ -70,7 +70,7 @@ export const auth = (email, password, isSignUp) => {
  }
 }
 
-/* */
+/* This function is used to set a redirect path that we can use to redirect a user to a given page after a certain operation is done. Like for example */
 export const setAuthRedirectPath = (path) => {
  return{
   type: actionTypes.SET_AUTH_REDIRECT_PATH,
@@ -92,7 +92,7 @@ export const authCheckState = () => {
     const userId = localStorage.getItem('userId');
     dispatch(authSuccess(token, userId));
     //getTime() will give correct time in milliseconds. Converted to seconds as we convert this time to millisecond in in our 'checkAuthTimeout()' action creator. 
-    dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()/1000)));
+    dispatch(checkAuthTimeout(((expirationDate.getTime() - new Date().getTime())/1000)));
    }
    else{
     dispatch(logOut());
