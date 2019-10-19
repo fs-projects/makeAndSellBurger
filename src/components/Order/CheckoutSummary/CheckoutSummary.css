@@ -4,8 +4,10 @@
 	margin: auto;
 }
 
+
+/* This piece was affecting the width of the div enclosing the burger. On small screen the burger looks aligned towards right in comparsion to this CheckoutSummary div. 
 @media (min-width: 600px) {
 	.CheckoutSummary {
 		width: 500px;
 	}
-}
+} */
