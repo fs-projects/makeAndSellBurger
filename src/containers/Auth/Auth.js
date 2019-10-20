@@ -6,6 +6,8 @@ import { Redirect } from 'react-router-dom';
 
 import * as actions from '../../store/actions/index';
 
+import { updateObject, checkValidity } from '../../shared/utility';
+
 import Input from '../../components/UI/Input/Input';
 
 import Button from '../../components/UI/Button/Button';
@@ -62,20 +64,6 @@ class Auth extends Component {
     this.props.onSetAuthRedirectPath();
    }
  }
-
- checkValidity (value, rules) {
-		
-		let isValid = false;
-
-		if(rules.required) {
-			isValid = value.trim() !== '';
-		
-			if(rules.minLength && rules.maxLength) {
-				isValid = (value.length >= rules.minLength) && (value.length <= rules.maxLength)
-				}	
-		}
-		return isValid;
- }
  
  inputChangedHandler = (event,controlName) => {
   const updatedControls = {
@@ -83,11 +71,23 @@ class Auth extends Component {
    [controlName]:{
     ...this.state.controls[controlName],
     value: event.target.value,
-    valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+    valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
     touched: true
    } 
   };
   this.setState({controls:updatedControls});
+  
+  
+/*  Below is doing almost the same as above code block is doing - 
+    const updatedControls = updateObject(this.state.controls, {
+     [controlName]: updateObject(this.state.controls[controlName], {
+      value: event.target.value,
+      valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
+      touched: true   
+     })
+   }); 
+  this.setState({controls:updatedControls}); */
+  
  }
 
  onSubmitHandler = (event) => {

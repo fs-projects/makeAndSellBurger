@@ -22,10 +22,10 @@ class Modal extends Component{
 		return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
 	}
 
-	componentWillUpdate(){
+/* 	componentWillUpdate(){
 		console.log("Inside componentWillUpdate() of [Modal] Component..");
 	}
-
+ */
 	render() {
 		
 		return(

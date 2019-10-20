@@ -13,9 +13,9 @@ class OrderSummary extends Component {
 	//will also not update.
 	//Note : OrderSummary was a functional component, but for debugging purpose to check whether it re-renders when there is a 
 	//state change, I converted it to a class based component, let it be for now. 
-	componentWillUpdate(){
+	/* componentWillUpdate(){
 		console.log("Inside componentWillUpdate() of [OrderSummary] Component..");
-	}
+	} */
 
 	render() {
 		
