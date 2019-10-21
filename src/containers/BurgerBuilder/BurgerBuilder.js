@@ -21,7 +21,7 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 import * as actions from '../../store/actions/index'; //Importing every actions via a single index file so we don't have to include multiple import statement for different types of actions and hence keep the code leaner.
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
 	
 	/*
 	this is also a way of setting the state, something which is more used. 
